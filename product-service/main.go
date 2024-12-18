@@ -5,13 +5,12 @@ import (
 	"log"
 	"net"
 	"net/http"
+	JWTFilter "product-service/util"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	pb "github.com/mayur-lomate-personal/grpc-order-product-app/product-service/grpc/product"
+	"github.com/mayur-lomate-personal/grpc-order-product-app/product-service/service/product"
 	"google.golang.org/grpc"
-
-	pb "github.com/username/grpc-order-product-app/api/product"
-	"github.com/username/grpc-order-product-app/internal/middleware"
-	"github.com/username/grpc-order-product-app/internal/services/product"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(middleware.UnaryInterceptor),
+		grpc.UnaryInterceptor(JWTFilter.UnaryInterceptor),
 	)
 	pb.RegisterProductServiceServer(grpcServer, &product.ProductServiceServer{})
 
@@ -36,7 +35,7 @@ func main() {
 	// Wrap REST Gateway with JWT Middleware
 	httpServer := &http.Server{
 		Addr:    ":8080",
-		Handler: middleware.HTTPMiddleware(mux),
+		Handler: JWTFilter.HTTPMiddleware(mux),
 	}
 
 	// Start gRPC and HTTP Servers

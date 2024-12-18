@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "github.com/mayur-lomate-personal/grpc-order-product-app/product-service/grpc/api/v1/product";
+
+import "google/api/annotations.proto";
+
+service ProductService {
+    rpc GetProductDetails(GetProductRequest) returns (GetProductResponse) {
+        option (google.api.http) = {
+            get: "/api/products/{product_id}"
+        };
+    }
+    rpc UpdateStock(UpdateStockRequest) returns (UpdateStockResponse) {
+        option (google.api.http) = {
+            post: "/api/products/{product_id}/stock"
+            body: "*"
+        };
+    }
+}
+
+message GetProductRequest {
+    string product_id = 1;
+}
+
+message GetProductResponse {
+    string product_id = 1;
+    string name = 2;
+    double price = 3;
+    int32 stock = 4;
+}
+
+message UpdateStockRequest {
+    string product_id = 1;
+    int32 quantity = 2; // Negative for reducing stock
+}
+
+message UpdateStockResponse {
+    string product_id = 1;
+    int32 new_stock = 2;
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "github.com/mayur-lomate-personal/grpc-order-product-app/order-service/grpc/api/v1/order";  // Update with your actual Go package path
+
+import "google/api/annotations.proto";
+
+service OrderService {
+    rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse) {
+        option (google.api.http) = {
+            post: "/api/orders"
+            body: "*"
+        };
+    }
+}
+
+message PlaceOrderRequest {
+    string order_id = 1;
+    string product_id = 2;
+    int32 quantity = 3;
+}
+
+message PlaceOrderResponse {
+    string order_id = 1;
+    string status = 2;
+    double total_price = 3;
+}
