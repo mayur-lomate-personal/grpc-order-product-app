@@ -1,4 +1,4 @@
-package model
+package v1
 
 type Product struct {
 	ID          int32

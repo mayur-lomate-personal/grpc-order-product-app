@@ -2,11 +2,11 @@
 // source: api/v1/product.proto
 
 /*
-Package product is a reverse proxy.
+Package v1 is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package product
+package v1
 
 import (
 	"context"
@@ -45,7 +45,7 @@ func request_ProductService_GetProductDetails_0(ctx context.Context, marshaler r
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "product_id")
 	}
-	protoReq.ProductId, err = runtime.String(val)
+	protoReq.ProductId, err = runtime.Int32(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "product_id", err)
 	}
@@ -63,7 +63,7 @@ func local_request_ProductService_GetProductDetails_0(ctx context.Context, marsh
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "product_id")
 	}
-	protoReq.ProductId, err = runtime.String(val)
+	protoReq.ProductId, err = runtime.Int32(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "product_id", err)
 	}
@@ -84,7 +84,7 @@ func request_ProductService_UpdateStock_0(ctx context.Context, marshaler runtime
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "product_id")
 	}
-	protoReq.ProductId, err = runtime.String(val)
+	protoReq.ProductId, err = runtime.Int32(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "product_id", err)
 	}
@@ -105,7 +105,7 @@ func local_request_ProductService_UpdateStock_0(ctx context.Context, marshaler r
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "product_id")
 	}
-	protoReq.ProductId, err = runtime.String(val)
+	protoReq.ProductId, err = runtime.Int32(val)
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "product_id", err)
 	}
@@ -125,7 +125,7 @@ func RegisterProductServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/product.ProductService/GetProductDetails", runtime.WithHTTPPathPattern("/api/products/{product_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/product.ProductService/GetProductDetails", runtime.WithHTTPPathPattern("/api/v1/products/{product_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -145,7 +145,7 @@ func RegisterProductServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/product.ProductService/UpdateStock", runtime.WithHTTPPathPattern("/api/products/{product_id}/stock"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/product.ProductService/UpdateStock", runtime.WithHTTPPathPattern("/api/v1/products/{product_id}/stock"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -203,7 +203,7 @@ func RegisterProductServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/product.ProductService/GetProductDetails", runtime.WithHTTPPathPattern("/api/products/{product_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/product.ProductService/GetProductDetails", runtime.WithHTTPPathPattern("/api/v1/products/{product_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -220,7 +220,7 @@ func RegisterProductServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/product.ProductService/UpdateStock", runtime.WithHTTPPathPattern("/api/products/{product_id}/stock"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/product.ProductService/UpdateStock", runtime.WithHTTPPathPattern("/api/v1/products/{product_id}/stock"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -237,8 +237,8 @@ func RegisterProductServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_ProductService_GetProductDetails_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "products", "product_id"}, ""))
-	pattern_ProductService_UpdateStock_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"api", "products", "product_id", "stock"}, ""))
+	pattern_ProductService_GetProductDetails_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "products", "product_id"}, ""))
+	pattern_ProductService_UpdateStock_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "products", "product_id", "stock"}, ""))
 )
 
 var (

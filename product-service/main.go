@@ -5,15 +5,24 @@ import (
 	"log"
 	"net"
 	"net/http"
-	JWTFilter "product-service/util"
+	v1Controller "product-service/controller/v1"
+	JWTFilter "product-service/filter/v1"
+	v1Product "product-service/grpc/api/v1"
+	v1Service "product-service/service/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	pb "github.com/mayur-lomate-personal/grpc-order-product-app/product-service/grpc/product"
-	"github.com/mayur-lomate-personal/grpc-order-product-app/product-service/service/product"
 	"google.golang.org/grpc"
 )
 
 func main() {
+
+	productService := v1Service.NewProductService()
+
+	// Initialize the ProductController and inject the ProductService
+	productController := &v1Controller.ProductController{
+		Service: productService,
+	}
+
 	// gRPC Server
 	grpcLis, err := net.Listen("tcp", ":50052")
 	if err != nil {
@@ -22,19 +31,19 @@ func main() {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(JWTFilter.UnaryInterceptor),
 	)
-	pb.RegisterProductServiceServer(grpcServer, &product.ProductServiceServer{})
+	v1Product.RegisterProductServiceServer(grpcServer, productController)
 
 	// REST Gateway
 	mux := runtime.NewServeMux()
 	ctx := context.Background()
-	err = pb.RegisterProductServiceHandlerServer(ctx, mux, &product.ProductServiceServer{})
+	err = v1Product.RegisterProductServiceHandlerServer(ctx, mux, productController)
 	if err != nil {
 		log.Fatalf("Failed to register REST gateway: %v", err)
 	}
 
 	// Wrap REST Gateway with JWT Middleware
 	httpServer := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8081",
 		Handler: JWTFilter.HTTPMiddleware(mux),
 	}
 
@@ -45,7 +54,7 @@ func main() {
 			log.Fatalf("Failed to serve gRPC: %v", err)
 		}
 	}()
-	log.Println("Product Service running on REST port 8080")
+	log.Println("Product Service running on REST port 8081")
 	if err := httpServer.ListenAndServe(); err != nil {
 		log.Fatalf("Failed to serve REST: %v", err)
 	}

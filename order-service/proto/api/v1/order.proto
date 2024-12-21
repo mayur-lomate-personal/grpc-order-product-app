@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package order;
 
-option go_package = "github.com/mayur-lomate-personal/grpc-order-product-app/order-service/grpc/api/v1/order";  // Update with your actual Go package path
+option go_package = "github.com/mayur-lomate-personal/grpc-order-product-app/order-service/grpc/api/v1";  // Update with your actual Go package path
 
 import "google/api/annotations.proto";
 

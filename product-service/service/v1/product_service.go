@@ -1,21 +1,20 @@
-package service
+package v1
 
 import (
 	"errors"
+	v1model "product-service/model/v1"
 	"sync"
-
-	"github.com/mayur-lomate-personal/grpc-order-product-app/product-service/model"
 )
 
 type ProductService struct {
-	productStore map[int32]*model.Product
+	productStore map[int32]*v1model.Product
 	mu           sync.RWMutex
 }
 
 // NewProductService initializes the ProductService
 func NewProductService() *ProductService {
 	return &ProductService{
-		productStore: map[int32]*model.Product{
+		productStore: map[int32]*v1model.Product{
 			1: {ID: 1, Name: "Laptop", Description: "High-performance laptop", Price: 1200.50, Stock: 10},
 			2: {ID: 2, Name: "Smartphone", Description: "Latest model smartphone", Price: 800.99, Stock: 25},
 		},
@@ -23,7 +22,7 @@ func NewProductService() *ProductService {
 }
 
 // GetProductByID retrieves product details
-func (ps *ProductService) GetProductByID(productID int32) (*model.Product, error) {
+func (ps *ProductService) GetProductByID(productID int32) (*v1model.Product, error) {
 	ps.mu.RLock()
 	defer ps.mu.RUnlock()
 
