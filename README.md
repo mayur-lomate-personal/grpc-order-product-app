@@ -1,6 +1,5 @@
-**Order and Product Management System with gRPC and JWT Authentication**  
+### **Order and Product Management System with gRPC and JWT Authentication**  
 
-**Description:**  
 This project demonstrates a **microservices-based architecture** for managing **orders** and **products** using **gRPC** and **REST** APIs. It features two independent services—**Order Service** and **Product Service**—that communicate via **gRPC** with secure **JWT-based authentication**. The system supports placing orders, checking product availability, and updating stock in real-time.  
 
 Key highlights include:  
