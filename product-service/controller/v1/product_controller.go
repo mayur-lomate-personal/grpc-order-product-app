@@ -3,22 +3,22 @@ package v1
 import (
 	"context"
 
-	v1Product "product-service/grpc/api/v1"
-	v1Service "product-service/service/v1"
-	v1Util "product-service/util/v1"
+	productgrpc "product-service/grpc/api/v1"
+	service "product-service/service/v1"
+	util "product-service/util/v1"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type ProductController struct {
-	v1Product.UnimplementedProductServiceServer
-	Service *v1Service.ProductService
+	productgrpc.UnimplementedProductServiceServer
+	Service *service.ProductService
 }
 
 // GetProductDetails retrieves product details by ID
-func (pc *ProductController) GetProductDetails(ctx context.Context, req *v1Product.GetProductRequest) (*v1Product.GetProductResponse, error) {
-	if err := v1Util.ValidateProductID(req.ProductId); err != nil {
+func (pc *ProductController) GetProductDetails(ctx context.Context, req *productgrpc.GetProductRequest) (*productgrpc.GetProductResponse, error) {
+	if err := util.ValidateProductID(req.ProductId); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
 
@@ -27,7 +27,7 @@ func (pc *ProductController) GetProductDetails(ctx context.Context, req *v1Produ
 		return nil, status.Errorf(codes.NotFound, "product not found: %v", err)
 	}
 
-	return &v1Product.GetProductResponse{
+	return &productgrpc.GetProductResponse{
 		ProductId:   product.ID,
 		Name:        product.Name,
 		Description: product.Description,
@@ -37,8 +37,8 @@ func (pc *ProductController) GetProductDetails(ctx context.Context, req *v1Produ
 }
 
 // UpdateStock updates the stock of a product
-func (pc *ProductController) UpdateStock(ctx context.Context, req *v1Product.UpdateStockRequest) (*v1Product.UpdateStockResponse, error) {
-	if err := v1Util.ValidateProductID(req.ProductId); err != nil {
+func (pc *ProductController) UpdateStock(ctx context.Context, req *productgrpc.UpdateStockRequest) (*productgrpc.UpdateStockResponse, error) {
+	if err := util.ValidateProductID(req.ProductId); err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, err.Error())
 	}
 
@@ -47,7 +47,7 @@ func (pc *ProductController) UpdateStock(ctx context.Context, req *v1Product.Upd
 		return nil, status.Errorf(codes.Internal, "failed to update stock: %v", err)
 	}
 
-	return &v1Product.UpdateStockResponse{
+	return &productgrpc.UpdateStockResponse{
 		ProductId: req.ProductId,
 		NewStock:  updatedStock,
 		Message:   "Stock updated successfully",

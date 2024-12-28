@@ -1,0 +1,5 @@
+db_host: "localhost"
+db_user: "mayur"
+db_password: "mayur123"
+db_name: "ecommerce"
+db_port: 5432

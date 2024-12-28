@@ -5,10 +5,10 @@ import (
 	"log"
 	"net"
 	"net/http"
-	v1Controller "order-service/controller/v1"
+	controller "order-service/controller/v1"
 	JWTFilter "order-service/filter/v1"
-	v1Order "order-service/grpc/api/v1"
-	v1Service "order-service/service/v1"
+	model "order-service/grpc/api/v1"
+	service "order-service/service/v1"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -23,10 +23,10 @@ func main() {
 	defer productConn.Close()
 
 	// Initialize OrderService with ProductService client
-	orderService := v1Service.NewOrderService(productConn)
+	orderService := service.NewOrderService(productConn)
 
 	// Initialize the OrderController and inject OrderService
-	orderController := &v1Controller.OrderController{
+	orderController := &controller.OrderController{
 		Service: orderService,
 	}
 
@@ -38,12 +38,12 @@ func main() {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(JWTFilter.UnaryInterceptor),
 	)
-	v1Order.RegisterOrderServiceServer(grpcServer, orderController)
+	model.RegisterOrderServiceServer(grpcServer, orderController)
 
 	// REST Gateway setup
 	mux := runtime.NewServeMux()
 	ctx := context.Background()
-	err = v1Order.RegisterOrderServiceHandlerServer(ctx, mux, orderController)
+	err = model.RegisterOrderServiceHandlerServer(ctx, mux, orderController)
 	if err != nil {
 		log.Fatalf("Failed to register REST gateway: %v", err)
 	}

@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	v1Product "github.com/mayur-lomate-personal/grpc-order-product-app/product-service/grpc/api/v1"
+	product "github.com/mayur-lomate-personal/grpc-order-product-app/product-service/grpc/api/v1"
 	"google.golang.org/grpc" // For gRPC status codes
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -26,13 +26,13 @@ type Order struct {
 
 // OrderService handles business logic for orders
 type OrderService struct {
-	productClient v1Product.ProductServiceClient // Injected ProductService gRPC client
+	productClient product.ProductServiceClient // Injected ProductService gRPC client
 }
 
 // NewOrderService initializes the OrderService with a gRPC ProductService client
 func NewOrderService(productConn *grpc.ClientConn) *OrderService {
 	return &OrderService{
-		productClient: v1Product.NewProductServiceClient(productConn),
+		productClient: product.NewProductServiceClient(productConn),
 	}
 }
 
@@ -44,7 +44,7 @@ func (os *OrderService) PlaceOrder(orderID, productID, quantity int32, token str
 	ctx = metadata.NewOutgoingContext(ctx, metadata.Pairs("authorization", token))
 
 	// Step 1: Get Product Details
-	productResp, err := os.productClient.GetProductDetails(ctx, &v1Product.GetProductRequest{
+	productResp, err := os.productClient.GetProductDetails(ctx, &product.GetProductRequest{
 		ProductId: productID,
 	})
 	if err != nil {
@@ -62,7 +62,7 @@ func (os *OrderService) PlaceOrder(orderID, productID, quantity int32, token str
 	}
 
 	// Step 3: Update Stock
-	_, err = os.productClient.UpdateStock(ctx, &v1Product.UpdateStockRequest{
+	_, err = os.productClient.UpdateStock(ctx, &product.UpdateStockRequest{
 		ProductId: productID,
 		Quantity:  -quantity, // Reduce stock
 	})
